@@ -1,39 +1,11 @@
-# azure-pipelines.yml
-
+variables:
+  system.debug: true
 trigger:
-- main  # Trigger the pipeline on changes to the 'main' branch
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-# Step 1: Checkout the code from the repository
-- task: Checkout@1
-  displayName: 'Checkout Repository'
-
-# Step 2: Install Node.js using the package manager
-- script: |
-    echo Installing Node.js...
-    curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-  displayName: 'Install Node.js'
-
-# Step 3: Install live-server globally
-- script: |
-    echo Installing live-server...
-    npm install -g live-server
-  displayName: 'Install live-server'
-
-# Step 4: Start live-server to serve index.html
-- script: |
-    echo Starting live-server to host index.html...
-    live-server --port=8080 --host=0.0.0.0 --open=index.html
-  displayName: 'Serve HTML Project'
-
-# Step 5 (Optional): Publish HTML files as pipeline artifacts
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish HTML Files as Artifact'
-  inputs:
-    targetPath: $(System.DefaultWorkingDirectory)
-    artifact: html-project
-    publishLocation: 'pipeline'
+- script: echo "Hello, World!"
+  displayName: 'Test Pipeline'
