@@ -11,10 +11,11 @@ steps:
 - task: Checkout@1
   displayName: 'Checkout Repository'
 
-# Step 2: Install Node.js (required for live-server)
-- task: UseNode@2
-  inputs:
-    versionSpec: '16.x'
+# Step 2: Install Node.js using the package manager
+- script: |
+    echo Installing Node.js...
+    curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+    sudo apt-get install -y nodejs
   displayName: 'Install Node.js'
 
 # Step 3: Install live-server globally
