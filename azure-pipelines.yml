@@ -1,11 +1,40 @@
-variables:
-  system.debug: true
 trigger:
-- main
+- main  # Trigger the pipeline on changes to the 'main' branch
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo "Hello, World!"
-  displayName: 'Test Pipeline'
+# Step 1: Checkout the code explicitly
+- task: Checkout@1
+  inputs:
+    repository: self
+    fetchDepth: 1
+  displayName: 'Checkout Code'
+
+# Step 2: Install Node.js and npm
+- script: |
+    echo Installing Node.js...
+    curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+  displayName: 'Install Node.js and npm'
+
+# Step 3: Install live-server globally
+- script: |
+    echo Installing live-server...
+    npm install -g live-server
+  displayName: 'Install live-server'
+
+# Step 4: Start live-server to host the HTML project
+- script: |
+    echo Starting live-server...
+    live-server --port=8080 --host=0.0.0.0 --open=index.html
+  displayName: 'Serve HTML Project'
+
+# Step 5 (Optional): Publish HTML files as pipeline artifacts
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish HTML Files as Artifact'
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)
+    artifact: html-project
+    publishLocation: 'pipeline'
